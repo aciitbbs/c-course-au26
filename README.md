@@ -39,7 +39,7 @@ A student is given attendance marks varying linearly from -5 for 0% attendance t
 
 ## 📅 Chapter-Based Course Plan (Autumn 2026 Academic Schedule)
 
-This course now follows a **chapter-based structure** (one folder per book chapter), rather than a week-based one — every chapter's lecture, quiz, lab, and flashcards are self-contained in its own `Chapter-XX/` folder, making it easy to study a topic independently of which week it happens to fall in.
+This course now follows a **chapter-based structure** (one folder per book chapter), rather than a week-based one — every chapter's lecture, quiz, and flashcards are self-contained in its own `Chapter-XX/` folder, making it easy to study a topic independently of which week it happens to fall in.
 
 ### Pre-Mid-Semester (Jul 24 – Sep 11, 2026)
 
@@ -90,7 +90,6 @@ New to C programming? Start here:
 
 1. **[Setup Guide](SETUP_GUIDE.md)** — Install a C compiler on Windows / macOS / Linux
 2. **[Chapter 1 Lecture](Chapter-01/lecture.md)** — Your first C program
-3. **[Chapter 1 Lab](Chapter-01/lab.md)** — Hands-on exercises
 
 ## 📁 Repository Structure
 
@@ -104,7 +103,6 @@ Programming-in-C-Course/
 ├── Chapter-01/
 │   ├── lecture.md                ← Thorough lecture notes covering the entire chapter
 │   ├── quiz.md                   ← Exactly 10 questions (5 MCQ + 5 short descriptive), with full answers
-│   ├── lab.md                    ← Exactly 3 questions (2 easy @ 3 marks + 1 medium @ 4 marks), complete solutions
 │   └── flashcards.md             ← Expanded quick-revision flashcards
 ├── Chapter-02/ ... Chapter-20/   ← Same structure for every chapter in the syllabus
 ├── Mid-Sem/
