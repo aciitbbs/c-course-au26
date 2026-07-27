@@ -23,7 +23,7 @@ A copy of the textbook is available in the [`book/`](book/) directory for refere
 
 | Day | Session | Time | Venue |
 |-----|---------|------|-------|
-| **Monday** | Lab | 10:30 AM – 12:25 PM | Prog-C (Lab) (Gr-2) (LBC 103 and 104) |
+| **Monday** | Lab | 10:30 AM – 12:25 PM | LBC 103 and 104 |
 | **Thursday** | Lecture | 10:30 AM – 12:25 PM | U13L |
 
 ## 📊 Evaluation Scheme
@@ -41,17 +41,17 @@ A student is given attendance marks varying linearly from -5 for 0% attendance t
 
 This course now follows a **chapter-based structure** (one folder per book chapter), rather than a week-based one — every chapter's lecture, quiz, and flashcards are self-contained in its own `Chapter-XX/` folder, making it easy to study a topic independently of which week it happens to fall in.
 
-### Pre-Mid-Semester (Jul 24 – Sep 11, 2026)
+### Pre-Mid-Semester (Jul 31 – Sep 11, 2026)
 
-| Week | Dates (Approx.) | Chapter(s) Covered | Topic |
+| Chapter(s) Covered | Topic |
 |------|-----------------|---------------------|-------|
-| Week 01 | Jul 24–31 | [Chapter 1](Chapter-01/) | Getting Started — C basics, compilation model, variables |
-| Week 02 | Aug 3–7 | [Chapter 2](Chapter-02/) | C Instructions — arithmetic, type conversion, precedence |
-| Week 03 | Aug 10–14 | [Chapter 3](Chapter-03/) | Decision Control — `if`, `if-else`, nested `if-else` |
-| Week 04 | Aug 17–21 | [Chapter 4](Chapter-04/), [Chapter 5](Chapter-05/) | Logical operators, ternary operator; `while` loops |
-| Week 05 | Aug 24–28 | [Chapter 6](Chapter-06/), [Chapter 7](Chapter-07/) | `for`/`do-while`, `break`/`continue`; `switch-case` |
-| Week 06 | Aug 31 – Sep 4 | [Chapter 8](Chapter-08/), [Chapter 9](Chapter-09/) | Functions; **Pointers** — address-of, dereference, call by reference |
-| Week 07 | Sep 7–11 | [Chapter 13](Chapter-13/) | **Arrays** (1-D) — declaration, traversal, pointers & arrays; Mid-Sem revision |
+| [Chapter 1](Chapter-01/) | Getting Started — C basics, compilation model, variables |
+| [Chapter 2](Chapter-02/) | C Instructions — arithmetic, type conversion, precedence |
+| [Chapter 3](Chapter-03/) | Decision Control — `if`, `if-else`, nested `if-else` |
+| [Chapter 4](Chapter-04/), [Chapter 5](Chapter-05/) | Logical operators, ternary operator; `while` loops |
+| [Chapter 6](Chapter-06/), [Chapter 7](Chapter-07/) | `for`/`do-while`, `break`/`continue`; `switch-case` |
+| [Chapter 8](Chapter-08/), [Chapter 9](Chapter-09/) | Functions; **Pointers** — address-of, dereference, call by reference |
+| [Chapter 13](Chapter-13/) | **Arrays** (1-D) — declaration, traversal, pointers & arrays; Mid-Sem revision |
 
 ### Mid-Semester Examination
 
@@ -63,16 +63,16 @@ This course now follows a **chapter-based structure** (one folder per book chapt
 
 ### Post-Mid-Semester (Sep 28 – Nov 20, 2026)
 
-| Week | Dates (Approx.) | Chapter(s) Covered | Topic |
+| Chapter(s) Covered | Topic |
 |------|-----------------|---------------------|-------|
-| Week 08 | Sep 28 – Oct 2 | [Chapter 10](Chapter-10/) | Recursion |
-| Week 09 | Oct 5–9 | [Chapter 14](Chapter-14/) | Multidimensional Arrays — 2-D/3-D arrays, matrix operations |
-| — | Oct 12–16 | — | *Autumn Break (Puja Holidays)* |
-| Week 10 | Oct 19–23 | [Chapter 11](Chapter-11/), [Chapter 12](Chapter-12/) | Data Types Revisited (storage classes); The C Preprocessor |
-| Week 11 | Oct 26–30 | [Chapter 15](Chapter-15/), [Chapter 16](Chapter-16/) | Strings; Handling Multiple Strings |
-| Week 12 | Nov 2–6 | [Chapter 17](Chapter-17/) | Structures |
-| Week 13 | Nov 9–13 | [Chapter 18](Chapter-18/), [Chapter 19](Chapter-19/) | Console I/O; File I/O |
-| Week 14 | Nov 16–20 | [Chapter 20](Chapter-20/) | More Issues in I/O (`argc`/`argv`, redirection); Comprehensive Revision |
+| [Chapter 10](Chapter-10/) | Recursion |
+| [Chapter 14](Chapter-14/) | Multidimensional Arrays — 2-D/3-D arrays, matrix operations |
+| — | *Autumn Break (Puja Holidays)* |
+| [Chapter 11](Chapter-11/), [Chapter 12](Chapter-12/) | Data Types Revisited (storage classes); The C Preprocessor |
+| [Chapter 15](Chapter-15/), [Chapter 16](Chapter-16/) | Strings; Handling Multiple Strings |
+| [Chapter 17](Chapter-17/) | Structures |
+| [Chapter 18](Chapter-18/), [Chapter 19](Chapter-19/) | Console I/O; File I/O |
+| [Chapter 20](Chapter-20/) | More Issues in I/O (`argc`/`argv`, redirection); Comprehensive Revision |
 
 ### End-Semester Examination
 
