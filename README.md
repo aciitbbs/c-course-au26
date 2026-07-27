@@ -44,7 +44,7 @@ This course now follows a **chapter-based structure** (one folder per book chapt
 ### Pre-Mid-Semester (Jul 31 – Sep 11, 2026)
 
 | Chapter(s) Covered | Topic |
-|------|-----------------|---------------------|-------|
+|---------------------|-------|
 | [Chapter 1](Chapter-01/) | Getting Started — C basics, compilation model, variables |
 | [Chapter 2](Chapter-02/) | C Instructions — arithmetic, type conversion, precedence |
 | [Chapter 3](Chapter-03/) | Decision Control — `if`, `if-else`, nested `if-else` |
@@ -64,7 +64,7 @@ This course now follows a **chapter-based structure** (one folder per book chapt
 ### Post-Mid-Semester (Sep 28 – Nov 20, 2026)
 
 | Chapter(s) Covered | Topic |
-|------|-----------------|---------------------|-------|
+|---------------------|-------|
 | [Chapter 10](Chapter-10/) | Recursion |
 | [Chapter 14](Chapter-14/) | Multidimensional Arrays — 2-D/3-D arrays, matrix operations |
 | — | *Autumn Break (Puja Holidays)* |
