@@ -12,6 +12,27 @@ Working with a file in C always follows the same three-step pattern:
 2. **Read from / write to** the file using that pointer.
 3. **Close** the file to release resources and ensure all data is actually saved (flushed) to disk.
 
+```mermaid
+flowchart TD
+    A([Start]) --> B["fp = fopen(name, mode)"]
+    B --> C{"fp == NULL ?"}
+    C -- Yes --> D["print an error message"]
+    D --> X([Stop])
+    C -- No --> E["read from / write to the file<br/>using fp"]
+    E --> F["fclose(fp)"]
+    F --> X
+```
+
+Think of `fp` as a **bookmark** into the file: every read or write happens at the bookmark's position and then moves it forward.
+
+```
+   Your program                         Disk
+ ┌──────────────┐    FILE *fp     ┌──────────────┐
+ │  fgetc, fgets│ ◄────────────── │   data.txt   │   reading
+ │  fputc, fputs│ ──────────────► │              │   writing
+ └──────────────┘                 └──────────────┘
+```
+
 ### 19.1.1 Opening a File
 
 ```c
@@ -39,12 +60,31 @@ if (fp == NULL)
 | `"a+"` | Read and append |
 | `"rb"`, `"wb"`, etc. | Same as above, but in **binary** mode (no text translation, e.g. of line endings) |
 
+**Picking the right mode:**
+
+```mermaid
+flowchart TD
+    A([What do I want to do with the file?]) --> B{"Only read<br/>existing data?"}
+    B -- Yes --> R["#quot;r#quot;<br/>(file must exist)"]
+    B -- No --> C{"Keep the old contents<br/>and add at the end?"}
+    C -- Yes --> AP["#quot;a#quot;<br/>(creates the file if missing)"]
+    C -- No --> W["#quot;w#quot;<br/>(⚠ erases old contents!)"]
+```
+
 ### 19.1.2 Reading from a File
 
 ```c
 char ch;
 while ((ch = fgetc(fp)) != EOF)
     putchar(ch);
+```
+
+```mermaid
+flowchart TD
+    A["ch = fgetc(fp)<br/>(read one character, move bookmark forward)"] --> B{"ch == EOF ?<br/>(End Of File)"}
+    B -- No --> C["putchar(ch)"]
+    C --> A
+    B -- Yes --> D([Done reading])
 ```
 
 ### 19.1.3 Closing the File
@@ -124,6 +164,29 @@ int main()
 }
 ```
 
+**Flow of the copy program:**
+
+```mermaid
+flowchart TD
+    A([Start]) --> B["open source.txt in #quot;r#quot; mode"]
+    B --> C{"source == NULL ?"}
+    C -- Yes --> E1([Error: stop])
+    C -- No --> D["open destination.txt in #quot;w#quot; mode"]
+    D --> F{"destination == NULL ?"}
+    F -- Yes --> G["fclose(source)"] --> E2([Error: stop])
+    F -- No --> H["ch = fgetc(source)"]
+    H --> I{"ch == EOF ?"}
+    I -- No --> J["fputc(ch, destination)"]
+    J --> H
+    I -- Yes --> K["fclose(source)<br/>fclose(destination)"]
+    K --> L([Done])
+```
+
+```
+ source.txt ──fgetc──►  ch  ──fputc──► destination.txt
+              (one character at a time, until EOF)
+```
+
 ## 19.4 String (Line) I/O in Files
 
 ```c
@@ -200,6 +263,18 @@ fseek(fp, 1 * sizeof(struct Student), SEEK_SET);   /* jump to the 2nd record (in
 fwrite(&updated, sizeof(struct Student), 1, fp);    /* overwrite it */
 
 fclose(fp);
+```
+
+**Picture of `students.dat`** — records sit one after another, each exactly `sizeof(struct Student)` bytes long:
+
+```
+ byte offset:  0                 1×size            2×size            3×size
+               ┌─────────────────┬─────────────────┬─────────────────┐
+               │   record 0      │   record 1      │   record 2      │
+               └─────────────────┴─────────────────┴─────────────────┘
+                                 ▲
+       fseek(fp, 1 * sizeof(struct Student), SEEK_SET)
+       moves the bookmark here, so fwrite overwrites record 1
 ```
 
 `SEEK_SET` (from file start), `SEEK_CUR` (from current position), and `SEEK_END` (from file end) are the three standard reference points for `fseek()`.

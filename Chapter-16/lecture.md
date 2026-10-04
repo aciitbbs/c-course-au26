@@ -73,6 +73,31 @@ int main()
 
 ### Memory Layout Comparison
 
+**2-D `char` array** — one big grid, every row the same width (`.` = unused byte):
+
+```
+char names[3][20];
+          0   1   2   3   4   5   6   7   8   9  10  11  12  ...  19
+names[0]  A   l   i   c   e  \0   .   .   .   .   .   .   .  ...   .    ← 14 bytes wasted
+names[1]  B   o   b  \0   .   .   .   .   .   .   .   .   .  ...   .    ← 16 bytes wasted
+names[2]  C   h   r   i   s   t   o   p   h   e   r  \0   .  ...   .    ←  8 bytes wasted
+```
+
+**Array of pointers** — a small array of addresses, each arrow pointing to a string that is exactly as long as it needs to be:
+
+```
+char *names[3];
+
+ names
+ ┌──────┐
+ │  [0] │ ───►  A l i c e \0
+ ├──────┤
+ │  [1] │ ───►  B o b \0
+ ├──────┤
+ │  [2] │ ───►  C h r i s t o p h e r \0
+ └──────┘
+```
+
 | Approach | Declaration | Memory Characteristics |
 |---|---|---|
 | 2-D `char` array | `char names[3][20];` | One contiguous block; every row fixed-width; simple but can waste space |
@@ -85,6 +110,17 @@ While memory-efficient, an **array of pointers initialized with string literals*
 ```c
 char *names[3] = {"Alice", "Bob", "Christopher"};
 names[0][0] = 'X';   /* DANGEROUS: modifying a string literal is undefined behaviour */
+```
+
+**Which one should I use?**
+
+```mermaid
+flowchart TD
+    A([I need to store a list of strings]) --> B{"Will the program change<br/>the strings or read them<br/>from the user?"}
+    B -- Yes --> C["Use a 2-D char array<br/>char names[3][20];"]
+    B -- "No, they are fixed text" --> D{"Are the lengths very different<br/>and the list long?"}
+    D -- Yes --> E["Use an array of pointers<br/>char *names[3];"]
+    D -- No --> F["Either works.<br/>2-D array is simplest."]
 ```
 
 If you need a **modifiable** collection of strings, either:
@@ -136,6 +172,26 @@ int main()
 
     return 0;
 }
+```
+
+**What happens at each comparison** (this is bubble sort, but using `strcmp` and `strcpy` instead of `>` and `=`):
+
+```mermaid
+flowchart TD
+    A["Compare arr[j] and arr[j+1]<br/>using strcmp()"] --> B{"strcmp(arr[j], arr[j+1]) > 0 ?<br/>(arr[j] comes later alphabetically)"}
+    B -- No --> F([Leave them, move to next pair])
+    B -- Yes --> C["strcpy(temp, arr[j])"]
+    C --> D["strcpy(arr[j], arr[j+1])"]
+    D --> E["strcpy(arr[j+1], temp)"]
+    E --> F
+```
+
+```
+ Swapping "Charlie" and "Alice" with a temp buffer:
+
+   arr[j]   = "Charlie"  ──(1)──►  temp = "Charlie"
+   arr[j+1] = "Alice"    ──(2)──►  arr[j]   = "Alice"
+   temp     = "Charlie"  ──(3)──►  arr[j+1] = "Charlie"
 ```
 
 **Output:**
@@ -210,6 +266,19 @@ int main()
 
     return 0;
 }
+```
+
+**Flow of `findName()`:**
+
+```mermaid
+flowchart TD
+    A([Start]) --> B["i = 0"]
+    B --> C{"i < n ?"}
+    C -- No --> F(["return -1: not found"])
+    C -- Yes --> D{"strcmp(arr[i], key) == 0 ?"}
+    D -- Yes --> E(["return i: found"])
+    D -- No --> G["i++"]
+    G --> C
 ```
 
 ## 16.6 Key Takeaways

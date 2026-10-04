@@ -56,6 +56,17 @@ int linearSearch(int arr[], int n, int key)
 }
 ```
 
+```mermaid
+flowchart TD
+    A([Start]) --> B["i = 0"]
+    B --> C{"i < n ?"}
+    C -- No --> F(["return -1: not found"])
+    C -- Yes --> D{"arr[i] == key ?"}
+    D -- Yes --> E(["return i: found"])
+    D -- No --> G["i++"]
+    G --> C
+```
+
 ### S.2.1 Trace
 
 Searching for `key = 23` in `{14, 7, 23, 9, 31}`:
@@ -110,6 +121,21 @@ int binarySearch(int arr[], int n, int key)
 }
 ```
 
+```mermaid
+flowchart TD
+    A([Start]) --> B["low = 0, high = n - 1"]
+    B --> C{"low <= high ?"}
+    C -- No --> X(["return -1: not found"])
+    C -- Yes --> D["mid = low + (high - low) / 2"]
+    D --> E{"arr[mid] == key ?"}
+    E -- Yes --> F(["return mid: found"])
+    E -- No --> G{"arr[mid] < key ?"}
+    G -- "Yes: key is on the right" --> H["low = mid + 1"]
+    G -- "No: key is on the left" --> I["high = mid - 1"]
+    H --> C
+    I --> C
+```
+
 > **Why `low + (high - low) / 2` and not `(low + high) / 2`?** Both give the same middle index, but for very large arrays `low + high` can exceed the largest value an `int` can hold (integer overflow). The first form never does. Either form is accepted in exams, but the safer one is a good habit.
 
 ### S.3.2 Trace: Key Found
@@ -121,6 +147,15 @@ Array (indices 0–9): `{2, 5, 8, 12, 16, 23, 38, 56, 72, 91}`, `key = 23`
 | 1 | 0 | 9 | 4 | 16 | 16 < 23, so `low = 5` |
 | 2 | 5 | 9 | 7 | 56 | 56 > 23, so `high = 6` |
 | 3 | 5 | 6 | 5 | 23 | **Found at index 5** |
+
+**The part still being searched shrinks by half each step:**
+
+```
+ index:    0   1   2   3   4   5   6   7   8   9
+ step 1: [ 2   5   8  12 (16) 23  38  56  72  91 ]   16 < 23 → throw away left half
+ step 2:                    [ 23  38 (56) 72  91 ]   56 > 23 → throw away right half
+ step 3:                    [(23) 38 ]               found at index 5
+```
 
 Only 3 comparisons for 10 elements. Linear search would have needed 6.
 
@@ -209,6 +244,25 @@ void selectionSort(int arr[], int n)
 }
 ```
 
+```mermaid
+flowchart TD
+    A([Start]) --> B["i = 0"]
+    B --> C{"i < n - 1 ?"}
+    C -- No --> Z([Array is sorted])
+    C -- Yes --> D["find minIndex: the position of the<br/>smallest value in arr[i] ... arr[n-1]"]
+    D --> E["swap arr[i] and arr[minIndex]"]
+    E --> F["i++<br/>(arr[0..i] is now final)"]
+    F --> C
+```
+
+```
+ sorted part │ unsorted part
+ ────────────┼──────────────────────
+             │ 64  25  12  22  11      smallest = 11 → swap with 64
+ 11          │ 25  12  22  64          smallest = 12 → swap with 25
+ 11  12      │ 25  22  64              ... and so on
+```
+
 ### S.4.1 Trace
 
 Sorting `{64, 25, 12, 22, 11}`:
@@ -256,6 +310,23 @@ void bubbleSort(int arr[], int n)
     }
 }
 ```
+
+```mermaid
+flowchart TD
+    A([Start a pass]) --> B["swapped = 0, j = 0"]
+    B --> C{"j < n - 1 - i ?"}
+    C -- Yes --> D{"arr[j] > arr[j+1] ?"}
+    D -- Yes --> E["swap arr[j] and arr[j+1]<br/>swapped = 1"]
+    D -- No --> F["j++"]
+    E --> F
+    F --> C
+    C -- "No (pass finished)" --> G{"swapped == 0 ?"}
+    G -- "Yes: no swaps made" --> Z([Array is sorted, stop early])
+    G -- No --> H["i++, start the next pass<br/>(largest value is now at the end)"]
+    H --> A
+```
+
+The outer loop also stops after `n - 1` passes, even if a swap happened in the last one.
 
 The inner loop runs only up to `n - 1 - i` because the last `i` elements are already in their final places.
 
@@ -313,6 +384,30 @@ void insertionSort(int arr[], int n)
         arr[j + 1] = key;     /* drop key into the gap */
     }
 }
+```
+
+```mermaid
+flowchart TD
+    A([Start]) --> B["i = 1"]
+    B --> C{"i < n ?"}
+    C -- No --> Z([Array is sorted])
+    C -- Yes --> D["key = arr[i]<br/>j = i - 1"]
+    D --> E{"j >= 0 AND arr[j] > key ?"}
+    E -- Yes --> F["arr[j+1] = arr[j]  (shift right)<br/>j--"]
+    F --> E
+    E -- No --> G["arr[j+1] = key  (drop into gap)"]
+    G --> H["i++"]
+    H --> C
+```
+
+```
+ Inserting key = 22 into the sorted part [33 44 55]:
+
+   33  44  55 | 22  11        take out 22, leaving a gap
+   33  44  __  55  11         55 > 22 → shift right
+   33  __  44  55  11         44 > 22 → shift right
+   __  33  44  55  11         33 > 22 → shift right
+   22  33  44  55 | 11        reached the start → drop 22 into the gap
 ```
 
 > **Order of the `while` condition matters.** `j >= 0` must come first: when `j` becomes `-1`, short-circuit evaluation (Chapter 4) stops before `arr[-1]` is read.

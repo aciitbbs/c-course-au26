@@ -19,6 +19,18 @@ char name2[6] = "Ayan";                       /* shorthand string-literal form -
 char greeting[] = "Hello";   /* size automatically inferred as 6: 'H','e','l','l','o','\0' */
 ```
 
+**Picture it in memory:**
+
+```
+greeting
+  ┌─────┬─────┬─────┬─────┬─────┬─────┐
+  │ 'H' │ 'e' │ 'l' │ 'l' │ 'o' │ '\0'│
+  └─────┴─────┴─────┴─────┴─────┴─────┘
+index:  0     1     2     3     4     5
+                                   ▲
+           5 visible characters    └── the end marker (6th slot)
+```
+
 ## 15.2 More About Strings
 
 ### Reading Strings
@@ -72,6 +84,18 @@ int main()
 }
 ```
 
+**Flow of the loop:**
+
+```mermaid
+flowchart TD
+    A([Start]) --> B["i = 0"]
+    B --> C{"str[i] != '\0' ?"}
+    C -- Yes --> D["print str[i]"]
+    D --> E["i++"]
+    E --> C
+    C -- "No (reached the end)" --> F([Stop])
+```
+
 This idiom — looping `while (str[i] != '\0')` — is the fundamental building block for nearly every manual string-processing algorithm in C.
 
 ## 15.3 Pointers and Strings
@@ -98,6 +122,19 @@ while (*p != '\0')
     p++;
 }
 printf("\n");
+```
+
+**How `p` moves through the string:**
+
+```
+          ┌─────┬─────┬─────┬─────┐
+   str →  │ 'H' │ 'i' │ '!' │ '\0'│
+          └─────┴─────┴─────┴─────┘
+             ▲     ▲     ▲     ▲
+   step 1:   p     │     │     │     *p is 'H' → print, p++
+   step 2:         p     │     │     *p is 'i' → print, p++
+   step 3:               p     │     *p is '!' → print, p++
+   step 4:                     p     *p is '\0' → loop stops
 ```
 
 ## 15.4 Standard Library String Functions (`<string.h>`)
@@ -152,6 +189,22 @@ int result = strcmp("apple", "banana");
    result == 0 : the strings are identical
    result > 0 : the first string comes after the second */
 ```
+
+**How `strcmp()` decides (character by character):**
+
+```mermaid
+flowchart TD
+    A([Start at the first character of s1 and s2]) --> B{"Are the two characters the same?"}
+    B -- No --> C{"Which character is smaller?"}
+    C -- "s1's" --> D(["return negative: s1 comes first"])
+    C -- "s2's" --> E(["return positive: s2 comes first"])
+    B -- Yes --> F{"Both are '\0' ?"}
+    F -- Yes --> G(["return 0: strings are equal"])
+    F -- No --> H["move to the next character"]
+    H --> B
+```
+
+For `strcmp("apple", "banana")`, the very first pair is `'a'` vs `'b'`; they differ and `'a'` is smaller, so the result is negative.
 
 > **Never compare strings with `==`!** `str1 == str2` compares the *pointer addresses*, not the string contents, and will almost always give the wrong (unintended) result. Always use `strcmp(str1, str2) == 0` to test for equality of *content*.
 
@@ -219,6 +272,26 @@ int main()
 
     return 0;
 }
+```
+
+**Flow of `isPalindrome()`** — two markers walk towards each other from both ends:
+
+```mermaid
+flowchart TD
+    A([Start]) --> B["start = 0<br/>end = strlen(str) - 1"]
+    B --> C{"start < end ?"}
+    C -- No --> G(["return 1: palindrome"])
+    C -- Yes --> D{"str[start] == str[end] ?"}
+    D -- No --> H(["return 0: not a palindrome"])
+    D -- Yes --> E["start++<br/>end--"]
+    E --> C
+```
+
+```
+"level":   l  e  v  e  l
+           ▲           ▲      'l' == 'l'  ✓
+              ▲     ▲         'e' == 'e'  ✓
+                 ▲            start meets end → palindrome
 ```
 
 ### Program 3: Counting Vowels and Consonants in a String

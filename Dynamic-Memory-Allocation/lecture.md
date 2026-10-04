@@ -36,6 +36,20 @@ C99's variable-length arrays (`int arr[n];`, Chapter 13) help a little, but they
 | Lifetime | Ends automatically when the function returns | Lasts until the program calls `free()` (or exits) |
 | Who releases it | The compiler, automatically | **The programmer**, explicitly |
 
+```
+   STACK  (automatic, small)                 HEAP  (manual, large)
+ ┌──────────────────────────┐          ┌──────────────────────────────┐
+ │ main():                  │          │                              │
+ │   int n = 5;             │          │   ┌───┬───┬───┬───┬───┐      │
+ │   int *p  ───────────────┼─────────►│   │ ? │ ? │ ? │ ? │ ? │      │
+ │                          │          │   └───┴───┴───┴───┴───┘      │
+ │ (vanishes when main      │          │   block from malloc(5 ints)  │
+ │  returns)                │          │   (stays until free(p))      │
+ └──────────────────────────┘          └──────────────────────────────┘
+```
+
+The **pointer** `p` is an ordinary local variable on the stack; the **block it points to** lives on the heap.
+
 > **Static vs dynamic allocation (exam definition):** In *static* allocation, the amount of memory is fixed at compile time. In *dynamic* allocation, memory is requested and released during execution using library functions such as `malloc()`, `calloc()`, `realloc()` and `free()`.
 
 All four functions are declared in **`<stdlib.h>`**, so every program in this lecture includes it.
@@ -54,6 +68,19 @@ void *malloc(size_t size);
 ```c
 int *p;
 p = (int *) malloc(5 * sizeof(int));   /* room for exactly 5 ints */
+```
+
+**The life of every heap block** — every DMA program follows this same flow:
+
+```mermaid
+flowchart TD
+    A([Start]) --> B["p = malloc(n * sizeof(int))"]
+    B --> C{"p == NULL ?"}
+    C -- Yes --> D["print error, stop<br/>(no memory available)"]
+    C -- No --> E["use p[0] ... p[n-1]<br/>like a normal array"]
+    E --> F["free(p)"]
+    F --> G["p = NULL"]
+    G --> H([End])
 ```
 
 ### D.2.1 Always Use `sizeof`
@@ -152,6 +179,13 @@ int *p = malloc(100 * sizeof(int));
 p = malloc(200 * sizeof(int));   /* LEAK: the first block of 100 ints is now unreachable */
 ```
 
+```
+ Before the 2nd malloc:            After the 2nd malloc:
+
+   p ───► [ 100 ints ]               [ 100 ints ]   ◄── nobody points here: LEAKED
+                                     p ───► [ 200 ints ]
+```
+
 A small leak in a short program does little harm, because the operating system reclaims everything when the program exits. In a long-running program (a server, an operating system, a game loop) leaks keep piling up until memory runs out.
 
 ### D.3.2 Dangling Pointers
@@ -162,6 +196,12 @@ After `free(p)`, the pointer `p` still holds the old address, but that memory no
 free(p);
 printf("%d\n", p[0]);   /* UNDEFINED BEHAVIOUR: using memory after it was freed */
 free(p);                /* UNDEFINED BEHAVIOUR: freeing the same block twice    */
+```
+
+```
+ 1. after malloc:      p ───► [ 10 | 20 | 30 ]      ✓ safe to use
+ 2. after free(p):     p ───► [ ?? | ?? | ?? ]      ✗ dangling: block is no longer yours
+ 3. after p = NULL:    p ───► NULL                  ✓ clearly "points to nothing"
 ```
 
 Setting `p = NULL;` immediately after `free(p);` protects against both mistakes: `free(NULL)` is defined to do nothing, and an accidental `p[0]` on a `NULL` pointer fails immediately instead of silently corrupting data.
@@ -219,6 +259,14 @@ else
 {
     p = temp;    /* only overwrite p once we know realloc succeeded */
 }
+```
+
+```mermaid
+flowchart TD
+    A["temp = realloc(p, new size)"] --> B{"temp == NULL ?"}
+    B -- "Yes (failed)" --> C["p is unchanged and still valid.<br/>Keep using it, or free(p)."]
+    B -- "No (success)" --> D["p = temp<br/>(the block may have moved)"]
+    D --> E["use p with the new size"]
 ```
 
 > **Why not write `p = realloc(p, ...)` directly?** If `realloc()` fails, it returns `NULL`, `p` gets overwritten with `NULL`, and the original block (still allocated) is lost forever: a memory leak.
@@ -328,6 +376,32 @@ m[1][2] = 7;    /* used exactly like a normal 2-D array */
 for (i = 0; i < r; i++)
     free(m[i]);
 free(m);
+```
+
+**Picture for `r = 3`, `c = 4`:**
+
+```
+   m
+   │
+   ▼
+ ┌──────┐
+ │ m[0] │ ───► [ . | . | . | . ]     ← row 0 (its own malloc)
+ ├──────┤
+ │ m[1] │ ───► [ . | . | 7 | . ]     ← row 1   (m[1][2] = 7)
+ ├──────┤
+ │ m[2] │ ───► [ . | . | . | . ]     ← row 2
+ └──────┘
+ array of row pointers (one malloc)
+```
+
+**Order of allocation and release:**
+
+```mermaid
+flowchart LR
+    A["malloc the array<br/>of row pointers"] --> B["malloc each row"]
+    B --> C["use m[i][j]"]
+    C --> D["free each row"]
+    D --> E["free m"]
 ```
 
 Freeing `m` first would lose the addresses of the rows, leaking all of them.
