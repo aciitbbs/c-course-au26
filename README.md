@@ -74,6 +74,15 @@ This course now follows a **chapter-based structure** (one folder per book chapt
 | [Chapter 18](Chapter-18/), [Chapter 19](Chapter-19/) | Console I/O; File I/O |
 | [Chapter 20](Chapter-20/) | More Issues in I/O (`argc`/`argv`, redirection); Comprehensive Revision |
 
+### Supplementary Topics
+
+These topics are part of the syllabus but are not covered as standalone chapters in *Let Us C*. Each folder has the same `lecture.md` / `quiz.md` / `flashcards.md` structure as a chapter.
+
+| Topic | Contents |
+|-------|----------|
+| [Dynamic Memory Allocation](Dynamic-Memory-Allocation/) | Stack vs heap; `malloc()`, `calloc()`, `realloc()`, `free()`; memory leaks and dangling pointers; dynamic strings, structures and 2-D arrays |
+| [Searching and Sorting](Searching-and-Sorting/) | Linear and binary search; selection, bubble and insertion sort; efficiency and stability |
+
 ### End-Semester Examination
 
 | | |
@@ -105,6 +114,8 @@ Programming-in-C-Course/
 │   ├── quiz.md                   ← Exactly 10 questions (5 MCQ + 5 short descriptive), with full answers
 │   └── flashcards.md             ← Expanded quick-revision flashcards
 ├── Chapter-02/ ... Chapter-20/   ← Same structure for every chapter in the syllabus
+├── Dynamic-Memory-Allocation/    ← Supplementary topic (same three files)
+├── Searching-and-Sorting/        ← Supplementary topic (same three files)
 ├── Mid-Sem/
 │   ├── exam_guidance.md          ← Mid-sem syllabus, pattern, and exam tips (Chapters 1-9, 13)
 │   └── revision_summary.md       ← Cheat sheet (Chapters 1-9, 13)
